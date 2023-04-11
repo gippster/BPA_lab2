@@ -8,7 +8,7 @@ def Botfunc(mean):
     logging.basicConfig(level=logging.INFO)
 
 
-    @dp.message_handler(commands="course")
+    @dp.message_handler(text="course")
     async def cmd_test1(message: types.Message):
         if mean > 80.0:
             await message.reply("Курс вырос свыше 80: " + str(mean) + " Российских рублей")
