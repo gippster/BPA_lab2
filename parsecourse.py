@@ -14,6 +14,6 @@ def course() -> float:
     for data in usd:  # Находим курс доллара
         if data.find('div'):
             usd_course = data.text
-    mean_of_course = float(usd_course.replace(",", ".").split()[0])
+    mean_of_course = float(usd_course.replace(",", ".").split()[0])  # Выделяем только значение курса доллара
     if usd_course != '':
         return mean_of_course
