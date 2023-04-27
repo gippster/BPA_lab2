@@ -20,11 +20,20 @@ def botfunc(mean):
 
     @dp.message_handler(commands=['start'], state='*')
     async def start(msg: types.Message):
+        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        button_1 = types.KeyboardButton(text="/borders")
+        button_2 = types.KeyboardButton(text="/info")
+        keyboard.add(button_1)
+        keyboard.add(button_2)
         await msg.answer("Бот покажет вам актуальный курс доллара, если он выйдет за границу. "
-                         "Чтобы задать границы напишите команду /borders")
+                         "Чтобы задать границы напишите команду /borders. "
+                         "/info, если вы уже задавали границы ранее", reply_markup=keyboard)
 
     @dp.message_handler(commands=['info'])
     async def info(message: types.Message):
+        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        buttons = ["/upper", "/lower"]
+        keyboard.add(*buttons)
         global change_borders
         user[0] = str(message.from_user.id)
         base_id = []
@@ -35,7 +44,7 @@ def botfunc(mean):
         except:
             user_info = []
         if int(user[1]) <= int(user[2]):
-            await message.answer("Верхняя граница не может быть меньше нижней!")
+            await message.answer("Верхняя граница не может быть меньше нижней!", reply_markup=keyboard)
             return 0
         if (user[0] not in base_id) or change_borders:
             if user[0] != '' and user[1] != '' and user[2] != '':
@@ -51,11 +60,11 @@ def botfunc(mean):
                     file.write(base[count])
                 file.close()
                 user_info = base[base_id.index(user[0])].split()
-                await message.answer("Верхняя граница " + user_info[1] + "\nНижняя граница " + user_info[2])
+                await message.answer("Верхняя граница " + user_info[1] + "\nНижняя граница " + user_info[2], reply_markup=keyboard)
             else:
-                await message.answer("Задайте границы!")
+                await message.answer("Задайте границы!", reply_markup=keyboard)
         else:
-            await message.answer("Верхняя граница " + user_info[1] + "\nНижняя граница " + user_info[2])
+            await message.answer("Верхняя граница " + user_info[1] + "\nНижняя граница " + user_info[2], reply_markup=keyboard)
         if int(user_info[1]) > mean > int(user_info[2]):
             await bot.send_message(user[0], "Курс в пределах границы")
         else:
@@ -63,13 +72,19 @@ def botfunc(mean):
 
     @dp.message_handler(commands=["borders"])
     async def borders(message: types.Message):
+        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        buttons = ["/upper", "/lower", "/info"]
+        keyboard.add(*buttons)
         await message.answer(
             "Чтобы задать границы напишите /upper и /lower,"
-            " а после /info чтобы узнать и обновить информацию о заданных границах")
+            " а после /info чтобы узнать и обновить информацию о заданных границах", reply_markup=keyboard)
 
     @dp.message_handler(commands=['upper'])
     async def upper(message: types.Message):
-        await message.answer("Задайте верхнюю границу")
+        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        buttons = ["/lower", "/info"]
+        keyboard.add(*buttons)
+        await message.answer("Задайте верхнюю границу", reply_markup=keyboard)
         global pending_upper, pending_lower, change_borders
         pending_upper = True
         pending_lower = False
@@ -77,7 +92,10 @@ def botfunc(mean):
 
     @dp.message_handler(commands=['lower'])
     async def lower(message: types.Message):
-        await message.answer("Задайте нижнюю границу")
+        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        buttons = ["/upper", "/info"]
+        keyboard.add(*buttons)
+        await message.answer("Задайте нижнюю границу", reply_markup=keyboard)
         global pending_lower, pending_upper, change_borders
         pending_lower = True
         pending_upper = False
