@@ -5,10 +5,6 @@ pending_upper = False
 pending_lower = False
 change_borders = False
 
-file = open("users.txt", "r")
-base = file.readlines()
-file.close()
-
 
 def botfunc(mean):
     bot = Bot(token="6277453202:AAGydD69wQ-ZkJnWTce5MU45cGd_bxm8E0Y")
@@ -37,6 +33,9 @@ def botfunc(mean):
         global change_borders
         user[0] = str(message.from_user.id)
         base_id = []
+        file = open("users.txt", "r")
+        base = file.readlines()
+        file.close()
         for i in range(len(base)):
             base_id.append(base[i].split()[0])
         try:
